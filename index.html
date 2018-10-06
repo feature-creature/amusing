@@ -19,10 +19,21 @@
         var socket = io();
         var oscMsg;
 
+        var url = new URL(window.location.href);
+        var headset = url.searchParams.get("headset");
+        
+        // if no headset is set in url, set to default headset 1
+        headset == null ? headset = "headset1" : headset = "headset" + headset;
+        // TODO: false match for 10+ headsets and headset1
+
         // osc messages
         socket.on("osc",function(msg){
-            oscMsg = msg;
-            $("#messages").append($("<li>").text(msg.address)); 
+            // only show data for this device's associated headset
+            if(msg.address.indexOf(headset) !== -1){
+                $("#messages").append($("<li>").text(msg.address + " : " + msg.args[0].value)); 
+                oscMsg = msg;
+            } 
+            
         });
     </script>
   </body>
