@@ -1,15 +1,11 @@
 // initialize http server and socket.io instance
-var app = require("express")();
+var express = require("express");
+var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var osc = require("osc-min");
 var dgram = require("dgram");
 
-
-// create route handler for home
-app.get("/",function(req,res){
-    res.sendFile(__dirname + "/index.html");
-});
 
 // listen for incoming sockets on the http server
 io.on("connection", function(socket){
@@ -268,3 +264,6 @@ http.listen(3000, function(){
     console.log("headset 15 listening on port 4515");
     headsetUDPServer16.bind(4516);
     console.log("headset 16 listening on port 4516");
+
+// create route handler for home
+app.use("/", express.static(__dirname + "/public"));

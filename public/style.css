@@ -1,0 +1,57 @@
+body{
+    margin: 0px;
+    color: gray;
+    font-family: helvetica;
+    border-top: 5px solid lightgray;
+}
+h1{
+    margin-bottom: 1em;
+}
+h3{
+    text-transform: uppercase;
+}
+canvas{
+    margin-left: 265px
+
+}
+button{
+    background-color: gray;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+.status{
+    display: none;
+}
+#go{
+    width: 100%;
+
+}
+.room{
+    margin: 0.25em;
+    width: 100%;
+}
+
+.data{
+    width: 175px;
+    float: left;
+    border-right: 1px solid lightgray;
+    padding: 0 45px;
+    position: absolute;
+    min-height: 100%;
+}
+#countdown{
+    margin: 1em 0;
+    font-weight: bold;
+}
+#rawMax6, #avgMax{
+    font-weight: bold;
+}
+
+.rooms{
+    margin: 5em 0;
+}

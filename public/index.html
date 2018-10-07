@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Amusing Socket.IO</title>
+    <link rel="stylesheet" type="text/css" media="all" href="style.css"></link>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./scripts/jquery.v2.min.js"></script>
+    <script src="./scripts/p5.min.js"></script>
+    <script src="./scripts/d3.v5.min.js"></script>
+  </head>
+  <body>
+
+    <div class="data">
+        
+        <h1>DEVOUR</h1>
+        <h3 id="not-wearing" class="status">Put On Headset</h3>
+        <h3 id="wearing" class="status">Human Brain Synced</h3>
+        <h3 id="baselining" class="status">Generating Human Brain Baseline</h3>
+        <h3 id="eating" class="status">Analyzing Human Brain Activity</h3>
+        <h3 id="finished" class="status">Human Brain Analysis Completed</h3>
+        <button id="go">Analyze</button>
+        <div id="countdown">0:30</div>
+
+        <div style="font-weight:bold; margin-bottom:0.5em;">raw data thresholds</div>
+        <div id="rawMax1"></div>
+        <div id="rawMax2"></div>
+        <div id="rawMax3"></div>
+        <div id="rawMax4"></div>
+        <div id="rawMax6"></div>
+        <div id="rawTotal"></div>
+        <br>
+
+        <div style="font-weight:bold; margin-bottom:0.5em;">wave data thresholds</div>
+        <div id="dMax"></div>
+        <div id="tMax"></div>
+        <div id="aMax"></div>
+        <div id="gMax"></div>
+        <div id="bMax"></div>
+        <div id="avgMax"></div>
+        <div id="absTotal"></div>
+
+        <div class="rooms">
+            <button id="room1" class="room">1</button>
+            <button id="room2" class="room">2</button>
+            <button id="room3" class="room">3</button>
+            <button id="room4" class="room">4</button>
+            <button id="room5" class="room">5</button>
+            <button id="room6" class="room">6</button>
+            <button id="save" class="room">Save</button>
+        </div>
+
+    </div>
+    <script>
+        // connect to socketio (defaults to localhost server ip:port)
+        var socket = io();
+        var oscMsg;
+
+        var url = new URL(window.location.href);
+        var headset = url.searchParams.get("headset");
+        
+        // if no headset is set in url, set to default headset 1
+        headset == null ? headset = "0" : headset = headset;
+
+        // osc messages
+        // socket.on(headset,function(msg){
+            // only show data for this device's associated headset
+            // oscMsg = msg;
+            // headset # + osc path + first value
+            // console.log("headset " + headset)
+ 			
+			//msg.elements[0].address +
+			//" : " + 
+			//msg.elements[0].args[0].value 
+        // });
+
+    </script>
+    <script src="./scripts/headset.js"></script>
+  </body>
+</html>
