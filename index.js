@@ -22,8 +22,8 @@ io.on("connection", function(socket){
 });
 
 
-// intialize upd server for osc messages
-var udp_server = dgram.createSocket("udp4", function(msg,rinfo){
+// intialize headset 1 upd server for osc messages
+var udp_server_headset_1 = dgram.createSocket("udp4", function(msg,rinfo){
     var osc_msg;
     try{
         osc_msg = osc.fromBuffer(msg);
@@ -32,8 +32,42 @@ var udp_server = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",osc_msg);
+    io.emit("osc",{
+       "message": osc_msg,
+       "headset":"1"
+    });
+});
 
+// intialize headset 2 upd server for osc messages
+var udp_server_headset_2 = dgram.createSocket("udp4", function(msg,rinfo){
+    var osc_msg;
+    try{
+        osc_msg = osc.fromBuffer(msg);
+    } catch(err){
+        return console.log("could not decode OSC message");
+    }
+
+    // emit osc message to websocket clients
+    io.emit("osc",{
+       "message": osc_msg,
+       "headset":"2"
+    });
+});
+
+// intialize headset 3 upd server for osc messages
+var udp_server_headset_3 = dgram.createSocket("udp4", function(msg,rinfo){
+    var osc_msg;
+    try{
+        osc_msg = osc.fromBuffer(msg);
+    } catch(err){
+        return console.log("could not decode OSC message");
+    }
+
+    // emit osc message to websocket clients
+    io.emit("osc",{
+       "message": osc_msg,
+       "headset":"3"
+    });
 });
 
 
@@ -42,6 +76,11 @@ http.listen(3000, function(){
    console.log("http listening on :3000");
 });
 
-// have the udp server listen on port 4500
-udp_server.bind(4500);
-console.log("udp listening on :4500");
+// have the udp servers for each room listen on their dedicated ports
+udp_server_headset_1.bind(4501);
+udp_server_headset_2.bind(4502);
+udp_server_headset_3.bind(4503);
+
+console.log("room 1 listening on :4501");
+console.log("room 2 listening on :4502");
+console.log("room 2 listening on :4503");

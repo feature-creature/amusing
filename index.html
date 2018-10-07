@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Amusing Socket.IO</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
@@ -23,15 +23,21 @@
         var headset = url.searchParams.get("headset");
         
         // if no headset is set in url, set to default headset 1
-        headset == null ? headset = "headset1" : headset = "headset" + headset;
-        // TODO: false match for 10+ headsets and headset1
+        headset == null ? headset = "1" : headset = headset;
 
         // osc messages
         socket.on("osc",function(msg){
             // only show data for this device's associated headset
-            if(msg.address.indexOf(headset) !== -1){
-                $("#messages").append($("<li>").text(msg.address + " : " + msg.args[0].value)); 
-                oscMsg = msg;
+            oscMsg = msg;
+            if(msg.headset == headset){
+				// headset # + osc path + first value
+                $("#messages").append($("<li>").text(
+					msg.headset + 
+					" : " + 
+					msg.message.elements[0].address +
+					" : " + 
+					msg.message.elements[0].args[0].value
+				)); 
             } 
             
         });
