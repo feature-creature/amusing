@@ -23,22 +23,21 @@
         var headset = url.searchParams.get("headset");
         
         // if no headset is set in url, set to default headset 1
-        headset == null ? headset = "1" : headset = headset;
+        headset == null ? headset = "0" : headset = headset;
 
         // osc messages
-        socket.on("osc",function(msg){
+        socket.on(headset,function(msg){
             // only show data for this device's associated headset
             oscMsg = msg;
-            if(msg.headset == headset){
-				// headset # + osc path + first value
-                $("#messages").append($("<li>").text(
-					msg.headset + 
-					" : " + 
-					msg.message.elements[0].address +
-					" : " + 
-					msg.message.elements[0].args[0].value
-				)); 
-            } 
+            // headset # + osc path + first value
+            $("#messages").append($("<li>").text(
+                headset + 
+                " : " + 
+                msg.elements[0].address +
+                " : " + 
+                msg.elements[0].args[0].value
+            )); 
+            console.log("headset " + headset)
             
         });
     </script>

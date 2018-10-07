@@ -32,10 +32,7 @@ var headsetUDPServer1 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 1
-    });
+    io.emit("1",osc_msg);
 });
 
 // intialize a udp server for headset 2
@@ -48,10 +45,7 @@ var headsetUDPServer2 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 2
-    });
+    io.emit("2",osc_msg);
 });
 
 // intialize a udp server for headset 3
@@ -64,10 +58,7 @@ var headsetUDPServer3 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 3
-    });
+    io.emit("3",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -80,10 +71,7 @@ var headsetUDPServer4 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 4
-    });
+    io.emit("4",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -96,10 +84,7 @@ var headsetUDPServer5 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 5
-    });
+    io.emit("5",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -112,10 +97,7 @@ var headsetUDPServer6 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 6
-    });
+    io.emit("6",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -128,10 +110,7 @@ var headsetUDPServer7 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 7
-    });
+    io.emit("7",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -144,10 +123,7 @@ var headsetUDPServer8 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 8
-    });
+    io.emit("8",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -160,10 +136,7 @@ var headsetUDPServer9 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 9
-    });
+    io.emit("9",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -176,10 +149,7 @@ var headsetUDPServer10 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 10
-    });
+    io.emit("10",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -192,10 +162,7 @@ var headsetUDPServer11 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 11
-    });
+    io.emit("11",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -208,10 +175,7 @@ var headsetUDPServer12 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 12
-    });
+    io.emit("12",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -224,10 +188,7 @@ var headsetUDPServer13 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 13
-    });
+    io.emit("13",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -240,10 +201,7 @@ var headsetUDPServer14 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 14
-    });
+    io.emit("14",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -256,10 +214,7 @@ var headsetUDPServer15 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 15
-    });
+    io.emit("15",osc_msg);
 });
 
 // intialize a udp server for each headset's osc messages
@@ -272,10 +227,7 @@ var headsetUDPServer16 = dgram.createSocket("udp4", function(msg,rinfo){
     }
 
     // emit osc message to websocket clients
-    io.emit("osc",{
-        "message": osc_msg,
-        "headset": 16
-    });
+    io.emit("16",osc_msg);
 });
 
 // have the http server listen on port 3000
