@@ -10,8 +10,7 @@
     <script src="./scripts/d3.v5.min.js"></script>
   </head>
   <body>
-
-    <div class="data">
+    <section class="data">
         
         <h1>DEVOUR</h1>
         <h3 id="not-wearing" class="status">Put On Headset</h3>
@@ -50,30 +49,16 @@
             <button id="save" class="room">Save</button>
         </div>
 
-    </div>
+    </section>
     <script>
         // connect to socketio (defaults to localhost server ip:port)
         var socket = io();
         var oscMsg;
 
+        // set headset # from url param, default headset 1 if no headset param exists
         var url = new URL(window.location.href);
         var headset = url.searchParams.get("headset");
-        
-        // if no headset is set in url, set to default headset 1
         headset == null ? headset = "0" : headset = headset;
-
-        // osc messages
-        // socket.on(headset,function(msg){
-            // only show data for this device's associated headset
-            // oscMsg = msg;
-            // headset # + osc path + first value
-            // console.log("headset " + headset)
- 			
-			//msg.elements[0].address +
-			//" : " + 
-			//msg.elements[0].args[0].value 
-        // });
-
     </script>
     <script src="./scripts/headset.js"></script>
   </body>
