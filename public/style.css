@@ -8,7 +8,7 @@ body{
     font-weight: 300;
     margin: 0px;
     color: black;
-    border-top: 5px solid lightgray;
+    /*border-top: 5px solid lightgray;*/
     background: linear-gradient(145deg,#020024,#fff 0,#9f9d9d);
     min-height: 100%;
 }

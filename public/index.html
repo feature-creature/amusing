@@ -16,16 +16,16 @@
     <div id="canvas-container">
     </div>
     <!-- not connected -->
-    <div id="not-wearing" class="vis-aid">    
-        <h3>Hi <span>Name</span></h3>
+    <div id="not-wearing" class="vis-aid visual-indicator">    
+        <h3>Hi <span class="userName">Name</span></h3>
         <p>Please put the headset on and adjust so
         <br>
         it is tight to your forehead.</p>
     </div>
 
     <!-- connected -->
-    <div id="wearing" class="vis-aid hide">    
-        <h3>Hi <span>Name</span></h3>
+    <div id="wearing" class="vis-aid visual-indicator hide">    
+        <h3>Hi <span class="userName">Name</span></h3>
         <p>We are now connected to your brain data.</p>
         <p>Try to relax and when ready, start the experiment.</p>
         <button id="go">start experiment</button>
@@ -33,19 +33,20 @@
     </div>
 
     <!-- recording -->
-    <div id="recording" class="vis-aid hide">
+    <div id="recording" class="vis-aid visual-indicator hide">
         <!-- baseline -->
-        <p id="baselining" class="vis-aid hide">Stay Relaxed</p>
+        <p id="baselining" class="vis-aid visual-indicator hide">Stay Relaxed</p>
         <!-- tasting -->
-        <p id="eating" class="vis-aid hide">Now Taste!</p>
+        <p id="eating" class="vis-aid visual-indicator hide">Now Taste!</p>
         <img class="countdown-background" src="./assets/background.png">
         <div id="countdown">0:30</div>
         <!-- cancel -->
     </div>
 
     <!-- finished -->
-    <div id="finished" class="vis-aid hide">
-        <img class="countdown-background" src="./assets/check.png">
+    <div id="finished" class="vis-aid visual-indicator hide">
+        <img id="success-img" class="countdown-background visual-indicator hide" src="./assets/check.png">
+        <!-- <img id="error-img" class="countdown-background visual-indicator hide" src="./assets/background.png"> -->
     </div>
     
     </section>
@@ -68,6 +69,10 @@
         // user id
         var userID = url.searchParams.get("userID");
         userID == null ? userID = "121" : userID = userID;
+
+        var userName = url.searchParams.get("userName");
+        userName == null ? userName = "There" : userName = userName;
+
 
 
     </script>

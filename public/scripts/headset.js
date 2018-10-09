@@ -99,52 +99,6 @@ var roomColor0;
 var roomColor1;
 
 // ----------------------------------------
-// event: activate color
-// ----------------------------------------
-
-$('#room1').click(function(){
-    // Champagne: 185, 97, 236
-    roomColor1 = color(185,97, 236, 125);
-    roomColor = color(185,97, 236, 75);
-    roomColor0 = color(185,97, 236,16);
-});
-
-$('#room2').click(function(){
-    // Himulayan Salt: 236, 142, 109
-    roomColor1 = color(236, 142, 109,125);
-    roomColor = color(236, 142, 109,75);
-    roomColor0 = color(236, 142, 109,65);
-});
-
-$('#room3').click(function(){
-    // Mushroom: 97, 197, 144
-    roomColor1 = color(97, 197, 144,125);
-    roomColor = color(97, 197, 144,75);
-    roomColor0 = color(97, 197, 144,65);
-});
-
-$('#room4').click(function(){
-    // Cheescake: 232, 87, 76
-    roomColor1 = color(232, 87, 76,125);
-    roomColor = color(232, 87, 76,75);
-    roomColor0 = color(232, 87, 76,65);
-});
-
-$('#room5').click(function(){
-    // Thai: 98, 214, 224
-    roomColor1 = color(98, 214, 224,125);
-    roomColor = color(98, 214, 224,75);
-    roomColor0 = color(98, 214, 224,65);
-});
-
-$('#room6').click(function(){
-    // Coffee: 224, 159, 56
-    roomColor1 = color(224, 159, 56,125);
-    roomColor = color(224, 159, 56,75);
-    roomColor0 = color(224, 159, 56,65);
-});
-
-// ----------------------------------------
 // ----------------------------------------
 // HEADSET DATA EVENTS
 // ----------------------------------------
@@ -233,7 +187,7 @@ socket.on(tabletNum,function(msg){
     // event: head XY tilt
     if(data.address == "/muse/acc"){
         // TODO find best value
-        if(data.args[0].value < -0.2){
+        if(data.args[0].value < -0.3){
           accelerationX = 5;
         }
     }
@@ -278,49 +232,84 @@ socket.on(tabletNum,function(msg){
 
 
     // UPDATE THE DISPLAY STATE VARIABLES
-    if(wearing == 0){
-        $('#not-wearing').removeClass("hide");
-        
-        $('#wearing').addClass("hide");
-        $('#recording').addClass("hide");
-        $('#baselining').addClass("hide");
-        $('#eating').addClass("hide");
-        $('#finishing').addClass("hide");
-    }
-    if(wearing == 1 && baselining == 0){
-        $('#wearing').removeClass("hide");
-        
-        $('#not-wearing').addClass("hide");
-        $('#recording').addClass("hide");
-        $('#baselining').addClass("hide");
-        $('#eating').addClass("hide");
-        $('#finishing').addClass("hide");
-    };
-    if(baselining == 1){
-        $('#baselining').removeClass("hide");
-        $('#recording').removeClass("hide");
-        
-        $('#not-wearing').addClass("hide");
-        $('#wearing').addClass("hide");;
-        $('#eating').addClass("hide");
-        $('#finishing').addClass("hide");
-    }else{
-        $('#baselining').addClass("hide");
-    }
-    if(baselining == 2){
-        $('#recording').removeClass("hide");
-        $('#eating').removeClass("hide");
-    }else{
-        $('#eating').addClass("hide");
-    }
-    if(recording == 2){
-        $('#finished').removeClass("hide");
-        $('#eating').addClass("hide");
-        $('#recording').addClass("hide");
-    }else{
-        $('#finished').addClass("hide");
-    }
 
+    // if not wearing
+    if(wearing == 0){
+        $(".visual-indicator").addClass("hide");
+        if($('#not-wearing').hasClass("hide")){
+            $('#not-wearing').removeClass("hide");
+        }
+        
+        // $('#wearing').addClass("hide");
+        // $('#recording').addClass("hide");
+        // $('#baselining').addClass("hide");
+        // $('#eating').addClass("hide");
+        // $('#finishing').addClass("hide");
+        if(recording != 0){
+            go = 0;
+            recording = 0;
+            baselining = 0;
+            t.stop();
+        }
+
+
+    // if wearing but not recording
+    } else if(wearing == 1 && baselining == 0){
+        $(".visual-indicator").addClass("hide");
+        if($('#wearing').hasClass("hide")){
+            $('#wearing').removeClass("hide");
+        }
+        
+        // $('#not-wearing').addClass("hide");
+        // $('#recording').addClass("hide");
+        // $('#baselining').addClass("hide");
+        // $('#eating').addClass("hide");
+        // $('#finishing').addClass("hide");
+
+    // if wearing and baseline
+    }else if( baselining == 1){
+        $(".visual-indicator").addClass("hide");
+        if($('#recording').hasClass("hide")){
+            $('#recording').removeClass("hide");
+        }
+        if($('#baselining').hasClass("hide")){
+            $('#baselining').removeClass("hide");
+        }
+        
+        // $('#not-wearing').addClass("hide");
+        // $('#wearing').addClass("hide");;
+        // $('#eating').addClass("hide");
+        // $('#finishing').addClass("hide");
+
+    // if analysing
+    }else if(baselining == 2 && recording != 2){
+        $(".visual-indicator").addClass("hide");
+        if($('#recording').hasClass("hide")){
+            $('#recording').removeClass("hide");
+        }
+        if($('#eating').hasClass("hide")){
+            $('#eating').removeClass("hide");
+        }
+    // }else{
+    //     if(!$('#eating').hasClass("hide")){
+    //         $('#eating').addClass("hide"); 
+    //     }
+    }else if(recording == 2){
+        $(".visual-indicator").addClass("hide");
+
+        if($('#finished').hasClass("hide")){
+            $('#finished').removeClass("hide");
+        }
+        if($('#success-img').hasClass("hide")){
+            $('#success-img').removeClass("hide");
+        }
+        // $('#error-img').addClass("hide");
+        // $('#eating').addClass("hide");
+        // $('#recording').addClass("hide");
+    // }else{
+    //     if(!$('#finished').hasClass("hide"))
+    //     $('#finished').addClass("hide");
+    }
 
 });
 
@@ -371,15 +360,37 @@ d3.select("#go").on("click", function(){
 
                 // send image to database
                 $.ajax({
-                  type: "POST",
-                  url: "http://192.168.0.139:6001/api/devour/updateUser",
-                  data: {
-                    "userID": userID,
-                    "room": roomNum,
-                    "stream": canvas.toDataURL()
-                  },
-                  success : function(body){console.log(body)},
-                  dataType: "application/x-www-form-urlencoded"
+                    type: "POST",
+                    url: "http://192.168.0.139:6001/api/devour/updateUser",
+                    data: {
+                        "userID": userID,
+                        "room": roomNum,
+                        "stream": canvas.toDataURL()
+                    },
+                    success : function(body){
+
+                        console.log('success')
+                        setTimeout(function(){
+                            document.location.search = document.location.search + "&success=true"
+                            
+                        },1500);
+                    },
+                    error: function(){
+                        // $('#success-img').attr('src','./assets/error.png');
+                    document.location.search = document.location.search + "&success=true"
+                        
+                        setTimeout(function(){
+                            // t.stop();
+                            // $('#countdown').text("0:30")
+                            // go = 0;
+                            // wearing = 0;
+                            // recording = 0;
+                            // baselining = 0;
+                            // clear();
+                            // console.log("error");
+                        },5000)
+                    },
+                    dataType: ""
                 });
             }
         });
@@ -427,9 +438,47 @@ function setup() {
     noStroke();
 
     // default Champagne
-    roomColor1 = color(185,97, 236, 125);
-    roomColor = color(185,97, 236, 75);
-    roomColor0 = color(185,97, 236,16);
+    if(roomNum == 1){
+        // Champagne: 185, 97, 236
+        roomColor1 = color(185,97, 236, 125);
+        roomColor = color(185,97, 236, 75);
+        roomColor0 = color(185,97, 236,16);
+    };
+
+    if(roomNum == 2){
+        // Himulayan Salt: 236, 142, 109
+        roomColor1 = color(236, 142, 109,125);
+        roomColor = color(236, 142, 109,75);
+        roomColor0 = color(236, 142, 109,65);
+    };
+
+    if(roomNum == 3){
+        // Mushroom: 97, 197, 144
+        roomColor1 = color(97, 197, 144,125);
+        roomColor = color(97, 197, 144,75);
+        roomColor0 = color(97, 197, 144,65);
+    };
+
+    if(roomNum == 4){
+        // Cheescake: 232, 87, 76
+        roomColor1 = color(232, 87, 76,125);
+        roomColor = color(232, 87, 76,75);
+        roomColor0 = color(232, 87, 76,65);
+    };
+
+    if(roomNum == 5){
+        // Thai: 98, 214, 224
+        roomColor1 = color(98, 214, 224,125);
+        roomColor = color(98, 214, 224,75);
+        roomColor0 = color(98, 214, 224,65);
+    };
+
+    if(roomNum == 6){
+        // Coffee: 224, 159, 56
+        roomColor1 = color(224, 159, 56,125);
+        roomColor = color(224, 159, 56,75);
+        roomColor0 = color(224, 159, 56,65);
+    };
 }
 
 function draw() {
@@ -445,7 +494,6 @@ function draw() {
     // -----------------------------------------------
 
     if(wearing == 0){
-        roomColor = color(185,97, 236, 75);
 
         start = 0;
         push();
@@ -678,8 +726,9 @@ function draw() {
         ellipse(0,0,normalizedAbsolute5*3,normalizedAbsolute5*3);
         pop();
 
-
-        if(  jaw > 0 || accelerationX > 0 || rawTotal > rawTotalMax){
+        // raw totalmax is the trigger
+        if(  jaw > 0 || accelerationX > 0 || rawTotal > rawTotalMax * 10){
+            // console.log(accelerationX);
             push();
             
             rotate(frameCount/frameRotation);
@@ -725,3 +774,41 @@ function draw() {
         jaw = jaw - 1;
     }
 }
+
+// update the food displayed
+$(document).ready(function(){
+    var foods = [
+        "Champagne",
+        "Himulayan Salt",
+        "Mushroom Rissoto",
+        "Cheescake",
+        "Thai Green Curry",
+        "Coffee"
+    ];
+
+    for(var i = 0; i < foods.length; i++){
+        if(i == roomNum -1){
+            $('h2.with-lines span').text(foods[i]);
+        }
+    }
+
+    $('.userName').text(userName);
+
+});
+
+
+// parent.postMessage("success","*");
+
+
+var myEvent = new CustomEvent('my_event', { detail: {note: 'success'} })
+
+setTimeout(function(){
+    window.parent.dispatchEvent(myEvent);
+    console.log("sent")
+},3000)
+
+
+
+// window.addEventListener('iframe_message', function(e) {
+//     console.log(e.detail.note);
+// }, false
