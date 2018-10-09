@@ -56,8 +56,20 @@
 
         // set headset # from url param, default headset 1 if no headset param exists
         var url = new URL(window.location.href);
+        
+        // room number
+        var roomNum = url.searchParams.get("room");
+        roomNum == null ? roomNum = "1" : roomNum = roomNum;
+        
+        // tablet number
         var tabletNum = url.searchParams.get("tablet");
         tabletNum == null ? tabletNum = "1" : tabletNum = tabletNum;
+
+        // user id
+        var userID = url.searchParams.get("userID");
+        userID == null ? userID = "121" : userID = userID;
+
+
     </script>
     <script src="./scripts/headset.js"></script>
   </body>

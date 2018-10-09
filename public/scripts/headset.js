@@ -217,15 +217,6 @@ socket.on(tabletNum,function(msg){
         // normalizedRaw3 = normalizeRawEEGData(raw3, raw3Max, raw3Min);
         // normalizedRaw4 = normalizeRawEEGData(raw4, raw4Max, raw4Min);
         // normalizedRaw5 = normalizeRawEEGData(raw5, raw5Max, raw5Min);
-
-        // show values on screen
-        $('#rawMax1').text(raw1Max);
-        $('#rawMax2').text(raw2Max);
-        $('#rawMax3').text(raw3Max);
-        $('#rawMax4').text(raw4Max);
-        $('#rawMax6').text(rawTotalMax);
-        $('#rawTotal').text(rawTotal);
-
     }
 
 
@@ -284,16 +275,6 @@ socket.on(tabletNum,function(msg){
     }
 
     absoluteTotalMax = (absolute1Max + absolute2Max + absolute3Max + absolute4Max) / 4;
-
-
-    // TODO: move elsewhere?
-    // show data max values on screen
-    $('#dMax').text(absolute1Max);
-    $('#tMax').text(absolute2Max);
-    $('#aMax').text(absolute3Max);
-    $('#gMax').text(absolute4Max);
-    $('#bMax').text(absolute5Max);
-    $('#avgMax').text(absoluteTotalMax);
 
 
     // UPDATE THE DISPLAY STATE VARIABLES
@@ -393,9 +374,9 @@ d3.select("#go").on("click", function(){
                   type: "POST",
                   url: "http://192.168.0.139:6001/api/devour/updateUser",
                   data: {
-                    "userID":"121",
-                    "room":"6",
-                    "stream":canvas.toDataURL()
+                    "userID": userID,
+                    "room": roomNum,
+                    "stream": canvas.toDataURL()
                   },
                   success : function(body){console.log(body)},
                   dataType: "application/x-www-form-urlencoded"
