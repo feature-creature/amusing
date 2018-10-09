@@ -1,9 +1,59 @@
-body{
-    margin: 0px;
-    color: gray;
-    font-family: helvetica;
-    border-top: 5px solid lightgray;
+@font-face {
+    font-family: TESCOSerif-Regular;
+    src: url(./fonts/TESCO/TESCOSerif-Regular.ttf);
 }
+
+body{
+    font-family: TESCOSerif-Regular;
+    font-weight: 300;
+    margin: 0px;
+    color: black;
+    border-top: 5px solid lightgray;
+    background: linear-gradient(145deg,#020024,#fff 0,#9f9d9d);
+    min-height: 100%;
+}
+
+.devour-logo{
+    margin: 50px auto 0;
+    max-width: 200px;
+}
+.devour-logo img{
+    width: 100%;
+}
+
+.data{
+    display: none;
+}
+header{
+        margin: 50px auto 0;
+        display: block;
+        padding: 0;
+}
+header h2.with-lines {
+    position: relative;
+    font-size: 25px;
+    font-family: TESCOSerif-Regular;
+    font-weight: 300;
+    text-align: center;
+}
+
+header h2.with-lines:before, header h2.with-lines:after {
+    content: "";
+    position: absolute;
+    top: -15px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-top: 1px solid #000;
+    width: 50px;
+}
+
+header h2.with-lines:after {
+    top: auto;
+    bottom: -25px;
+}
+
+
 h1{
     margin-bottom: 1em;
 }
@@ -11,7 +61,8 @@ h3{
     text-transform: uppercase;
 }
 canvas{
-    margin-left: 265px
+    margin-left: -300px;
+    padding-left: 50%;
 
 }
 button{
@@ -28,7 +79,7 @@ button{
     display: none;
 }
 #go{
-    width: 100%;
+    width: 45%;
 
 }
 .room{
@@ -47,6 +98,8 @@ button{
 #countdown{
     margin: 1em 0;
     font-weight: bold;
+    margin-top: -3em;
+    font-size: 2em;
 }
 #rawMax6, #avgMax{
     font-weight: bold;
@@ -54,4 +107,58 @@ button{
 
 .rooms{
     margin: 5em 0;
+}
+
+p,h2{
+    font-face:;
+}
+
+button{
+    background: #000;
+    display: inline-flex;
+    font-family: TESCOSerif-Regular;
+    justify-content: center;
+    outline: none;
+    border: none;
+    color: #fff;
+    align-items: center;
+}
+
+.vis-aid{
+    text-align: center;
+    position: absolute;
+    width: 600px;
+    top: 27.75em;
+    left: 50%;
+    margin-left: -300px;
+}
+
+.vis-aid.hide{
+    display: none;
+}
+
+.countdown-background{
+    width: 8em;
+}
+
+#baselining, #eating{
+    position: absolute;
+    top: -6em;
+}
+#baselining {
+    color: black;
+    background-color: white;
+    padding: 0.5em  1em ;
+    width: 7em;
+    margin-left: -4.5em;
+    border-radius: 5px;
+}
+
+#eating{
+    color: white;
+    background-color: black;
+    padding: 0.5em 1em;
+    width: 7em;
+    margin-left: -4.5em;
+    border-radius: 5px;
 }

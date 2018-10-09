@@ -10,45 +10,44 @@
     <script src="./scripts/d3.v5.min.js"></script>
   </head>
   <body>
-    <section class="data">
-        
-        <h1>DEVOUR</h1>
-        <h3 id="not-wearing" class="status">Put On Headset</h3>
-        <h3 id="wearing" class="status">Human Brain Synced</h3>
-        <h3 id="baselining" class="status">Generating Human Brain Baseline</h3>
-        <h3 id="eating" class="status">Analyzing Human Brain Activity</h3>
-        <h3 id="finished" class="status">Human Brain Analysis Completed</h3>
-        <button id="go">Analyze</button>
-        <div id="countdown">0:30</div>
-
-        <div style="font-weight:bold; margin-bottom:0.5em;">raw data thresholds</div>
-        <div id="rawMax1"></div>
-        <div id="rawMax2"></div>
-        <div id="rawMax3"></div>
-        <div id="rawMax4"></div>
-        <div id="rawMax6"></div>
-        <div id="rawTotal"></div>
+    <section>
+    <div class="devour-logo"><a href="/"><img src="devour.svg" alt="Devour logo"></a></div>
+    <header><h2 class="with-lines">Create your <span>Champagne</span> sensory map</h2></header>
+    <div id="canvas-container">
+    </div>
+    <!-- not connected -->
+    <div id="not-wearing" class="vis-aid">    
+        <h3>Hi <span>Name</span></h3>
+        <p>Please put the headset on and adjust so
         <br>
+        it is tight to your forehead.</p>
+    </div>
 
-        <div style="font-weight:bold; margin-bottom:0.5em;">wave data thresholds</div>
-        <div id="dMax"></div>
-        <div id="tMax"></div>
-        <div id="aMax"></div>
-        <div id="gMax"></div>
-        <div id="bMax"></div>
-        <div id="avgMax"></div>
-        <div id="absTotal"></div>
+    <!-- connected -->
+    <div id="wearing" class="vis-aid hide">    
+        <h3>Hi <span>Name</span></h3>
+        <p>We are now connected to your brain data.</p>
+        <p>Try to relax and when ready, start the experiment.</p>
+        <button id="go">start experiment</button>
+        <!-- not you? -->
+    </div>
 
-        <div class="rooms">
-            <button id="room1" class="room">1</button>
-            <button id="room2" class="room">2</button>
-            <button id="room3" class="room">3</button>
-            <button id="room4" class="room">4</button>
-            <button id="room5" class="room">5</button>
-            <button id="room6" class="room">6</button>
-            <button id="save" class="room">Save</button>
-        </div>
+    <!-- recording -->
+    <div id="recording" class="vis-aid hide">
+        <!-- baseline -->
+        <p id="baselining" class="vis-aid hide">Stay Relaxed</p>
+        <!-- tasting -->
+        <p id="eating" class="vis-aid hide">Now Taste!</p>
+        <img class="countdown-background" src="./assets/background.png">
+        <div id="countdown">0:30</div>
+        <!-- cancel -->
+    </div>
 
+    <!-- finished -->
+    <div id="finished" class="vis-aid hide">
+        <img class="countdown-background" src="./assets/check.png">
+    </div>
+    
     </section>
     <script>
         // connect to socketio (defaults to localhost server ip:port)
@@ -57,8 +56,8 @@
 
         // set headset # from url param, default headset 1 if no headset param exists
         var url = new URL(window.location.href);
-        var headset = url.searchParams.get("headset");
-        headset == null ? headset = "0" : headset = headset;
+        var tabletNum = url.searchParams.get("tablet");
+        tabletNum == null ? tabletNum = "1" : tabletNum = tabletNum;
     </script>
     <script src="./scripts/headset.js"></script>
   </body>

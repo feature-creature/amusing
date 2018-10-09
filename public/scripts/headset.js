@@ -14,6 +14,10 @@ var baselining = 0;
 var start = 0;
 var go = 0;
 
+
+var counter = 1;
+var count = 1;
+
 // ----------------------------------------
 // initialize MUSE EEG data variables
 // ----------------------------------------
@@ -94,6 +98,51 @@ var roomColor;
 var roomColor0;
 var roomColor1;
 
+// ----------------------------------------
+// event: activate color
+// ----------------------------------------
+
+$('#room1').click(function(){
+    // Champagne: 185, 97, 236
+    roomColor1 = color(185,97, 236, 125);
+    roomColor = color(185,97, 236, 75);
+    roomColor0 = color(185,97, 236,16);
+});
+
+$('#room2').click(function(){
+    // Himulayan Salt: 236, 142, 109
+    roomColor1 = color(236, 142, 109,125);
+    roomColor = color(236, 142, 109,75);
+    roomColor0 = color(236, 142, 109,65);
+});
+
+$('#room3').click(function(){
+    // Mushroom: 97, 197, 144
+    roomColor1 = color(97, 197, 144,125);
+    roomColor = color(97, 197, 144,75);
+    roomColor0 = color(97, 197, 144,65);
+});
+
+$('#room4').click(function(){
+    // Cheescake: 232, 87, 76
+    roomColor1 = color(232, 87, 76,125);
+    roomColor = color(232, 87, 76,75);
+    roomColor0 = color(232, 87, 76,65);
+});
+
+$('#room5').click(function(){
+    // Thai: 98, 214, 224
+    roomColor1 = color(98, 214, 224,125);
+    roomColor = color(98, 214, 224,75);
+    roomColor0 = color(98, 214, 224,65);
+});
+
+$('#room6').click(function(){
+    // Coffee: 224, 159, 56
+    roomColor1 = color(224, 159, 56,125);
+    roomColor = color(224, 159, 56,75);
+    roomColor0 = color(224, 159, 56,65);
+});
 
 // ----------------------------------------
 // ----------------------------------------
@@ -101,7 +150,7 @@ var roomColor1;
 // ----------------------------------------
 // ----------------------------------------
 
-socket.on(headset,function(msg){
+socket.on(tabletNum,function(msg){
 
     // global data variable
     data = msg.elements[0];
@@ -115,7 +164,6 @@ socket.on(headset,function(msg){
         raw4 = data.args[3].value;
         raw5 = data.args[4].value;
 
-        // TODO
         // CREATE BASELINE MINIMUMS AND MAXIMUMS
         if(raw1 > raw1Max  && raw1 < 1400){ raw1Max = raw1;}
         if(raw1 < raw1Min && raw1 != 0){ raw1Min = raw1;}
@@ -138,7 +186,6 @@ socket.on(headset,function(msg){
 
         rawTotal = (raw1 + raw2 + raw3 + raw4 + raw5)/5;
 
-
         // TODO
         // if not recording, do not use data
         if(recording == 0){
@@ -157,6 +204,20 @@ socket.on(headset,function(msg){
 
         }
 
+        // update normalized values
+        normalizedRaw1 = normalizeRawEEGData(raw1, maxVal, minVal);
+        normalizedRaw2 = normalizeRawEEGData(raw2, maxVal, minVal);
+        normalizedRaw3 = normalizeRawEEGData(raw3, maxVal, minVal);
+        normalizedRaw4 = normalizeRawEEGData(raw4, maxVal, minVal);
+        normalizedRaw5 = normalizeRawEEGData(raw5, maxVal, minVal);
+
+        // // alternative normalization
+        // normalizedRaw1 = normalizeRawEEGData(raw1, raw1Max, raw1Min);
+        // normalizedRaw2 = normalizeRawEEGData(raw2, raw2Max, raw2Min);
+        // normalizedRaw3 = normalizeRawEEGData(raw3, raw3Max, raw3Min);
+        // normalizedRaw4 = normalizeRawEEGData(raw4, raw4Max, raw4Min);
+        // normalizedRaw5 = normalizeRawEEGData(raw5, raw5Max, raw5Min);
+
         // show values on screen
         $('#rawMax1').text(raw1Max);
         $('#rawMax2').text(raw2Max);
@@ -164,14 +225,6 @@ socket.on(headset,function(msg){
         $('#rawMax4').text(raw4Max);
         $('#rawMax6').text(rawTotalMax);
         $('#rawTotal').text(rawTotal);
-
-
-        // update normalized values
-        normalizedRaw1 = normalizeRawEEGData(raw1);
-        normalizedRaw2 = normalizeRawEEGData(raw2);
-        normalizedRaw3 = normalizeRawEEGData(raw3);
-        normalizedRaw4 = normalizeRawEEGData(raw4);
-        normalizedRaw5 = normalizeRawEEGData(raw5);
 
     }
 
@@ -245,29 +298,46 @@ socket.on(headset,function(msg){
 
     // UPDATE THE DISPLAY STATE VARIABLES
     if(wearing == 0){
-        $('#not-wearing').show();
-        $('#wearing').hide();
+        $('#not-wearing').removeClass("hide");
+        
+        $('#wearing').addClass("hide");
+        $('#recording').addClass("hide");
+        $('#baselining').addClass("hide");
+        $('#eating').addClass("hide");
+        $('#finishing').addClass("hide");
     }
     if(wearing == 1 && baselining == 0){
-        $('#not-wearing').hide()
-        $('#wearing').show()
+        $('#wearing').removeClass("hide");
+        
+        $('#not-wearing').addClass("hide");
+        $('#recording').addClass("hide");
+        $('#baselining').addClass("hide");
+        $('#eating').addClass("hide");
+        $('#finishing').addClass("hide");
     };
     if(baselining == 1){
-        $('#baselining').show();
-        $('#wearing').hide();
+        $('#baselining').removeClass("hide");
+        $('#recording').removeClass("hide");
+        
+        $('#not-wearing').addClass("hide");
+        $('#wearing').addClass("hide");;
+        $('#eating').addClass("hide");
+        $('#finishing').addClass("hide");
     }else{
-        $('#baselining').hide();
+        $('#baselining').addClass("hide");
     }
     if(baselining == 2){
-        $('#eating').show();
+        $('#recording').removeClass("hide");
+        $('#eating').removeClass("hide");
     }else{
-        $('#eating').hide();
+        $('#eating').addClass("hide");
     }
     if(recording == 2){
-        $('#finished').show();
-        $('#eating').hide();
+        $('#finished').removeClass("hide");
+        $('#eating').addClass("hide");
+        $('#recording').addClass("hide");
     }else{
-        $('#finished').hide();
+        $('#finished').addClass("hide");
     }
 
 
@@ -288,31 +358,14 @@ function normalizeRawGiroData(rawData){
     }
 }
 
-function normalizeRawEEGData(rawData){
-    return map(rawData,minVal,maxVal,2,0.5);
+function normalizeRawEEGData(rawData,rawMax,rawMin){
+    return map(rawData,rawMin,rawMax,2,0.5);
 }
 
 
 function normalizeAbsoluteData(rawData,rawDataMax,rawDataMin){
         return map(rawData,rawDataMin,rawDataMax,1,0.25);
 }
-
-
-// ----------------------------------------
-// SAVING / STORING CANVAS DATA
-// ----------------------------------------
-
-// encode to base64
-function encodeVis(){
-
-}
-
-
-$('#save').on("click",function(){
-    var dateName = new Date;
-    saveCanvas(dateName.toDateString(),'png');
-});
-
 
 // ----------------------------------------
 // TIMER
@@ -324,7 +377,6 @@ d3.select("#go").on("click", function(){
         go = 1;
         baselining = 1;
         recording = 1;
-        $("#go").text('reset');
         t = d3.timer(function(elapsed) {
             if(elapsed < 1 * 30000){
                 $('#countdown').text(millisToMAndS((30 * 1000) - elapsed))
@@ -334,13 +386,25 @@ d3.select("#go").on("click", function(){
             }else{
                 recording = 2;
                 t.stop();
-                $('#countdown').text("0:30")
+                $('#countdown').text(" ");
+
+                // send image to database
+                $.ajax({
+                  type: "POST",
+                  url: "http://192.168.0.139:6001/api/devour/updateUser",
+                  data: {
+                    "userID":"121",
+                    "room":"6",
+                    "stream":canvas.toDataURL()
+                  },
+                  success : function(body){console.log(body)},
+                  dataType: "application/x-www-form-urlencoded"
+                });
             }
         });
     }else{
         go = 0;
         t.stop();
-        $("#go").text('Analyse');
         $('#countdown').text("0:30")
         wearing = 0;
         recording = 0;
@@ -355,58 +419,11 @@ function millisToMAndS(millis) {
     return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
 }
 
-// ----------------------------------------
-// colors
-// ----------------------------------------
-
-$('#room1').click(function(){
-    // Champagne: 185, 97, 236
-    roomColor1 = color(185,97, 236, 125);
-    roomColor = color(185,97, 236, 75);
-    roomColor0 = color(185,97, 236,16);
-});
-
-$('#room2').click(function(){
-    // Himulayan Salt: 236, 142, 109
-    roomColor1 = color(236, 142, 109,125);
-    roomColor = color(236, 142, 109,75);
-    roomColor0 = color(236, 142, 109,65);
-});
-
-$('#room3').click(function(){
-    // Mushroom: 97, 197, 144
-    roomColor1 = color(97, 197, 144,125);
-    roomColor = color(97, 197, 144,75);
-    roomColor0 = color(97, 197, 144,65);
-});
-
-$('#room4').click(function(){
-    // Cheescake: 232, 87, 76
-    roomColor1 = color(232, 87, 76,125);
-    roomColor = color(232, 87, 76,75);
-    roomColor0 = color(232, 87, 76,65);
-});
-
-$('#room5').click(function(){
-    // Thai: 98, 214, 224
-    roomColor1 = color(98, 214, 224,125);
-    roomColor = color(98, 214, 224,75);
-    roomColor0 = color(98, 214, 224,65);
-});
-
-$('#room6').click(function(){
-    // Coffee: 224, 159, 56
-    roomColor1 = color(224, 159, 56,125);
-    roomColor = color(224, 159, 56,75);
-    roomColor0 = color(224, 159, 56,65);
-});
-
-// ----------------------------------------
-// ----------------------------------------
+// -------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------
 // VISUALIZATION CODE
-// ----------------------------------------
-// ----------------------------------------
-
+// -------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------
 
 // ----------------------------------------
 // framerates
@@ -417,10 +434,14 @@ var frameRotation = 3.25; // tablet
 // var frameRotation = 3.5; // tablet
 // var frameRotation = 5; // desktop
 
-
+var viz;
 
 function setup() {
-    createCanvas(600, 600);
+    // createCanvas(600, 600);
+
+    viz = createCanvas(600, 600);
+    viz.parent('canvas-container');
+
     angleMode(DEGREES);
     noStroke();
 
@@ -432,16 +453,25 @@ function setup() {
 
 function draw() {
     
+    // 8 bit fading up and down
+    if(counter > 255){count = -2;}
+    if(counter < 0){count = 2;}
+    counter += count;
+    
+
     // -----------------------------------------------
     // IDLE : HEADBAND OFF
     // -----------------------------------------------
 
     if(wearing == 0){
+        roomColor = color(185,97, 236, 75);
+
         start = 0;
         push();
-        if(frameCount % 3 == 0){
-            fill(255,50);
-            rect(0,0,width,height);
+        if(frameCount % 10 == 0){
+            // fill(255,50);
+            // rect(0,0,width,height);
+            clear();
         }
 
         // center on canvas
@@ -497,8 +527,9 @@ function draw() {
 
         push();
         if(frameCount % 3 == 0){
-            fill(255,50);
-            rect(0,0,width,height);
+        //     fill(255,50);
+        //     rect(0,0,width,height);
+            clear();
         }
 
         // center on canvas
