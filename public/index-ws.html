@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Devour</title>
+    <link rel="stylesheet" type="text/css" media="all" href="style.css"></link>
+    <script src="./scripts/jquery.v2.min.js"></script>
+    <script src="./scripts/p5.min.js"></script>
+    <script src="./scripts/d3.v5.min.js"></script>
+    <script src="./scripts/osc-browser.js"></script>
+</head>
+<body>
+    <section>
+    <div class="devour-logo"><a href="/"><img src="devour.svg" alt="Devour logo"></a></div>
+    <header><h2 class="with-lines">Create your <span>Champagne</span> sensory map</h2></header>
+    <div id="canvas-container">
+    </div>
+    <!-- not connected -->
+    <div id="not-wearing" class="vis-aid visual-indicator">    
+        <h3>Hi <span class="userName">Name</span></h3>
+        <p>Please put the headset on and adjust so
+        <br>
+        it is tight to your forehead.</p>
+    </div>
+
+    <!-- connected -->
+    <div id="wearing" class="vis-aid visual-indicator hide">    
+        <h3>Hi <span class="userName">Name</sFpan></h3>
+        <p>We are now connected to your brain data.</p>
+        <p>Try to relax and when ready, start the experiment.</p>
+        <button id="go">start experiment</button>
+        <!-- not you? -->
+    </div>
+
+    <!-- recording -->
+    <div id="recording" class="vis-aid visual-indicator hide">
+        <!-- baseline -->
+        <p id="baselining" class="vis-aid visual-indicator hide">Stay Relaxed</p>
+        <!-- tasting -->
+        <p id="eating" class="vis-aid visual-indicator hide">Now Taste!</p>
+        <img class="countdown-background" src="./assets/background.png">
+        <div id="countdown">0:30</div>
+        <!-- cancel -->
+    </div>
+
+    <!-- finished -->
+    <div id="finished" class="vis-aid visual-indicator hide">
+        <img id="success-img" class="countdown-background visual-indicator hide" src="">
+        <!-- <img id="error-img" class="countdown-background visual-indicator hide" src="./assets/background.png"> -->
+    </div>
+    
+    </section>
+    <div id="gatherId"> 
+        <div class="devour-logo"><a href="/"><img src="devour.svg" alt="Devour logo"></a></div>
+        <!-- INTEGRATE = ADD BACK IN IF VISIBLE ON FULL SCREEN APP -->
+        <!-- <header><h2 class="with-lines">Enter your ID Number</h2></header> -->
+        <div id="putNum" class="submitId">
+            <input type="number" name="" placeholder="000">
+            <button>submit</button>
+        </div>
+
+    </div>
+    <script src="./scripts/headset-ws.js"></script>
+  </body>
+</html>
