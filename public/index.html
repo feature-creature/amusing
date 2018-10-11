@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Amusing Socket.IO</title>
+    <title>Devour</title>
     <link rel="stylesheet" type="text/css" media="all" href="style.css"></link>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./scripts/jquery.v2.min.js"></script>
@@ -25,7 +25,7 @@
 
     <!-- connected -->
     <div id="wearing" class="vis-aid visual-indicator hide">    
-        <h3>Hi <span class="userName">Name</span></h3>
+        <h3>Hi <span class="userName">Name</sFpan></h3>
         <p>We are now connected to your brain data.</p>
         <p>Try to relax and when ready, start the experiment.</p>
         <button id="go">start experiment</button>
@@ -45,12 +45,27 @@
 
     <!-- finished -->
     <div id="finished" class="vis-aid visual-indicator hide">
-        <img id="success-img" class="countdown-background visual-indicator hide" src="./assets/check.png">
+        <img id="success-img" class="countdown-background visual-indicator hide" src="">
         <!-- <img id="error-img" class="countdown-background visual-indicator hide" src="./assets/background.png"> -->
     </div>
     
     </section>
+    <div id="gatherId"> 
+        <div class="devour-logo"><a href="/"><img src="devour.svg" alt="Devour logo"></a></div>
+        <!-- INTEGRATE = ADD BACK IN IF VISIBLE ON FULL SCREEN APP -->
+        <!-- <header><h2 class="with-lines">Enter your ID Number</h2></header> -->
+        <div id="putNum" class="submitId">
+            <input type="number" name="" placeholder="000">
+            <button>submit</button>
+        </div>
+
+    </div>
     <script>
+
+        // set the room number and tablet number in the url
+        // example below
+        // http://localhost:3000/?room=6&tablet=2
+
         // connect to socketio (defaults to localhost server ip:port)
         var socket = io();
         var oscMsg;
@@ -58,23 +73,93 @@
         // set headset # from url param, default headset 1 if no headset param exists
         var url = new URL(window.location.href);
         
-        // room number
-        var roomNum = url.searchParams.get("room");
-        roomNum == null ? roomNum = "1" : roomNum = roomNum;
-        
         // tablet number
         var tabletNum = url.searchParams.get("tablet");
         tabletNum == null ? tabletNum = "1" : tabletNum = tabletNum;
 
-        // user id
-        var userID = url.searchParams.get("userID");
-        userID == null ? userID = "121" : userID = userID;
+        // room number
+        var roomNum = url.searchParams.get("room");
+        roomNum == null ? roomNum = "1" : roomNum = roomNum;
+        // // user id from input
+        var userID;
 
-        var userName = url.searchParams.get("userName");
-        userName == null ? userName = "There" : userName = userName;
+        // user name from ajax call
+        var userName;
+        
+        $(document).ready(function(){
+
+            var foods = [
+                "Champagne",
+                "Himalayan Salt",
+                "Mushroom",
+                "Thai Green Curry",
+                "Cheescake",
+                "Coffee"
+            ];
+
+            // set food title
+            for(var i = 0; i < foods.length; i++){
+                if(i == roomNum -1){
+                    $('h2.with-lines span').text(foods[i]);
+                }
+            }
+            
+
+            $('#putNum button').on('click',function(){
+                // get user id
+                userID = $("#gatherId input").val();
+                
+                console.log(userID);
+                console.log(userID.length);
+
+                // if userID was submitted in the correct format
+                if(userID != "" && userID.length == 3){
+
+                    // ----------------------------------------------------------
+                    // INTEGRATE YOUR API HERE
+                    // ajax call to get user name
+                    // (update to database IP address etc)
+                    // ----------------------------------------------------------
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:6008/api/devour/getUserByID?key=" + userID,
+                        data: {
+                        },
+                        success: function (body) {
+                            console.log('success')
+                            
+                            //set user name to name from data 
+                            //userName =                  
+                            $('.userName').text(userName);
+                            $('#gatherId').hide();
+
+                        },
+                        error: function () {
+
+                            // // use these 3 lines to test success state when you dont have api
+                            // userName = "Luke Demarest";
+                            // $('.userName').text(userName);
+                            // $('#gatherId').hide();
 
 
+                            // retry different number input if submitted number is not in database
+                            // todo: add error styling
+                            $("#gatherId input").val("");
+                            $("#gatherId input").attr("placeholder","000");
+                        },
+                        dataType: ""
+                    });
 
+                }else{
+
+                    // retry number in correct format
+                    // todo: add error styling
+                    $("#gatherId input").val("");
+                    $("#gatherId input").attr("placeholder","000");
+                }
+
+            });
+        });
     </script>
     <script src="./scripts/headset.js"></script>
   </body>

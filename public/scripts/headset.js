@@ -22,7 +22,7 @@ var count = 1;
 // initialize MUSE EEG data variables
 // ----------------------------------------
 var data;
-var raw1= 0;
+var raw1 = 0;
 var raw2 = 0;
 var raw3 = 0;
 var raw4 = 0;
@@ -48,7 +48,7 @@ var normalizedRaw3 = 0;
 var normalizedRaw4 = 0;
 var normalizedRaw5 = 0;
 
-var absolute1= 0;
+var absolute1 = 0;
 var absolute2 = 0;
 var absolute3 = 0;
 var absolute4 = 0;
@@ -67,7 +67,7 @@ var absolute4Max = -2;
 var absolute5Max = -2;
 var absoluteTotalMax = 0;
 
-var normalizedAbsolute1= 0;
+var normalizedAbsolute1 = 0;
 var normalizedAbsolute2 = 0;
 var normalizedAbsolute3 = 0;
 var normalizedAbsolute4 = 0;
@@ -98,243 +98,28 @@ var roomColor;
 var roomColor0;
 var roomColor1;
 
-// ----------------------------------------
-// ----------------------------------------
-// HEADSET DATA EVENTS
-// ----------------------------------------
-// ----------------------------------------
-
-socket.on(tabletNum,function(msg){
-
-    // global data variable
-    data = msg.elements[0];
-
-    // update raw data
-    if(data.address == "/muse/eeg"){
-
-        raw1 = data.args[0].value;
-        raw2 = data.args[1].value;
-        raw3 = data.args[2].value;
-        raw4 = data.args[3].value;
-        raw5 = data.args[4].value;
-
-        // CREATE BASELINE MINIMUMS AND MAXIMUMS
-        if(raw1 > raw1Max  && raw1 < 1400){ raw1Max = raw1;}
-        if(raw1 < raw1Min && raw1 != 0){ raw1Min = raw1;}
-
-        if(raw2 > raw2Max && raw2 < 1400){ raw2Max = raw2;}
-        if(raw2 < raw2Min && raw2 != 0){ raw2Min = raw2;}
-
-        if(raw3 > raw3Max && raw3 < 1400){ raw3Max = raw3;}
-        if(raw3 < raw3Min && raw3 != 0){ raw3Min = raw3;}
-
-        if(raw4 > raw4Max && raw4 < 1400){ raw4Max = raw4;}
-        if(raw4 < raw4Min && raw4 != 0){ raw4Min = raw4;}
-
-        if(raw5 > raw5Max && raw5 < 1400){ raw5Max = raw5;}
-        if(raw5 < raw5Min && raw5 != 0){ raw5Min = raw5;}
-
-        if(baselining == 1){
-            rawTotalMax = (raw1Max + raw2Max + raw3Max + raw4Max + raw5Max)/5;
-        }
-
-        rawTotal = (raw1 + raw2 + raw3 + raw4 + raw5)/5;
-
-        // TODO
-        // if not recording, do not use data
-        if(recording == 0){
-            raw1Max = 0;
-            raw2Max = 0;
-            raw3Max = 0;
-            raw4Max = 0;
-            raw5Max = 0;
-
-            absolute1Max = 0;
-            absolute2Max = 0;
-            absolute3Max = 0;
-            absolute4Max = 0;
-            absolute5Max = 0;
-            absoluteTotalMax = 0;
-
-        }
-
-        // update normalized values
-        normalizedRaw1 = normalizeRawEEGData(raw1, maxVal, minVal);
-        normalizedRaw2 = normalizeRawEEGData(raw2, maxVal, minVal);
-        normalizedRaw3 = normalizeRawEEGData(raw3, maxVal, minVal);
-        normalizedRaw4 = normalizeRawEEGData(raw4, maxVal, minVal);
-        normalizedRaw5 = normalizeRawEEGData(raw5, maxVal, minVal);
-
-        // // alternative normalization
-        // normalizedRaw1 = normalizeRawEEGData(raw1, raw1Max, raw1Min);
-        // normalizedRaw2 = normalizeRawEEGData(raw2, raw2Max, raw2Min);
-        // normalizedRaw3 = normalizeRawEEGData(raw3, raw3Max, raw3Min);
-        // normalizedRaw4 = normalizeRawEEGData(raw4, raw4Max, raw4Min);
-        // normalizedRaw5 = normalizeRawEEGData(raw5, raw5Max, raw5Min);
-    }
-
-
-    // state: headband "wearing"
-    if(data.address == "/muse/elements/touching_forehead"){
-        wearing = data.args[0].value;
-    }
-
-    // event: jaw clench
-    if(data.address == "/muse/elements/jaw_clench"){
-        jaw = 15;
-    }
-
-    // event: head XY tilt
-    if(data.address == "/muse/acc"){
-        // TODO find best value
-        if(data.args[0].value < -0.3){
-          accelerationX = 5;
-        }
-    }
-
-    // event: absolute data values
-    if(data.address == "/muse/elements/delta_absolute"){
-        absolute1 = data.args[0].value
-        if(absolute1 > absolute1Max){ absolute1Max = absolute1;}
-        if(absolute1 < absolute1Min && absolute1 != 0){ absolute1Min = absolute1;}
-        normalizedAbsolute1 = normalizeAbsoluteData(absolute1, absolute1Max,absolute1Min);
-    }
-
-    if(data.address == "/muse/elements/theta_absolute"){
-        absolute2 = data.args[0].value
-        if(absolute2 > absolute2Max){ absolute2Max = absolute2;}
-        if(absolute2 < absolute2Min && absolute2 != 0){ absolute2Min = absolute2;}
-        normalizedAbsolute2 = normalizeAbsoluteData(absolute2,absolute2Max,absolute2Min);
-    }
-
-    if(data.address == "/muse/elements/alpha_absolute"){
-        absolute3 = data.args[0].value
-        if(absolute3 > absolute3Max){ absolute3Max = absolute3;}
-        if(absolute3 < absolute3Min && absolute3 != 0){ absolute3Min = absolute3;}
-        normalizedAbsolute3 = normalizeAbsoluteData(absolute3,absolute3Max,absolute3Min);
-    }
-
-    if(data.address == "/muse/elements/beta_absolute"){
-        absolute4 = data.args[0].value
-        if(absolute4 > absolute4Max){ absolute4Max = absolute4;}
-        if(absolute4 < absolute4Min && absolute4 != 0){ absolute4Min = absolute4;}
-        normalizedAbsolute4 = normalizeAbsoluteData(absolute4,absolute4Max,absolute4Min);
-    }
-
-    if(data.address == "/muse/elements/gamma_absolute"){
-        absolute5 = data.args[0].value
-        if(absolute5 > absolute5Max){ absolute5Max = absolute5;}
-        if(absolute5 < absolute5Min && absolute5 != 0){ absolute5Min = absolute5;}
-        normalizedAbsolute5 = normalizeAbsoluteData(absolute5,absolute5Max,absolute5Min);
-    }
-
-    absoluteTotalMax = (absolute1Max + absolute2Max + absolute3Max + absolute4Max) / 4;
-
-
-    // UPDATE THE DISPLAY STATE VARIABLES
-
-    // if not wearing
-    if(wearing == 0){
-        $(".visual-indicator").addClass("hide");
-        if($('#not-wearing').hasClass("hide")){
-            $('#not-wearing').removeClass("hide");
-        }
-        
-        // $('#wearing').addClass("hide");
-        // $('#recording').addClass("hide");
-        // $('#baselining').addClass("hide");
-        // $('#eating').addClass("hide");
-        // $('#finishing').addClass("hide");
-        if(recording != 0){
-            go = 0;
-            recording = 0;
-            baselining = 0;
-            t.stop();
-        }
-
-
-    // if wearing but not recording
-    } else if(wearing == 1 && baselining == 0){
-        $(".visual-indicator").addClass("hide");
-        if($('#wearing').hasClass("hide")){
-            $('#wearing').removeClass("hide");
-        }
-        
-        // $('#not-wearing').addClass("hide");
-        // $('#recording').addClass("hide");
-        // $('#baselining').addClass("hide");
-        // $('#eating').addClass("hide");
-        // $('#finishing').addClass("hide");
-
-    // if wearing and baseline
-    }else if( baselining == 1){
-        $(".visual-indicator").addClass("hide");
-        if($('#recording').hasClass("hide")){
-            $('#recording').removeClass("hide");
-        }
-        if($('#baselining').hasClass("hide")){
-            $('#baselining').removeClass("hide");
-        }
-        
-        // $('#not-wearing').addClass("hide");
-        // $('#wearing').addClass("hide");;
-        // $('#eating').addClass("hide");
-        // $('#finishing').addClass("hide");
-
-    // if analysing
-    }else if(baselining == 2 && recording != 2){
-        $(".visual-indicator").addClass("hide");
-        if($('#recording').hasClass("hide")){
-            $('#recording').removeClass("hide");
-        }
-        if($('#eating').hasClass("hide")){
-            $('#eating').removeClass("hide");
-        }
-    // }else{
-    //     if(!$('#eating').hasClass("hide")){
-    //         $('#eating').addClass("hide"); 
-    //     }
-    }else if(recording == 2){
-        $(".visual-indicator").addClass("hide");
-
-        if($('#finished').hasClass("hide")){
-            $('#finished').removeClass("hide");
-        }
-        if($('#success-img').hasClass("hide")){
-            $('#success-img').removeClass("hide");
-        }
-        // $('#error-img').addClass("hide");
-        // $('#eating').addClass("hide");
-        // $('#recording').addClass("hide");
-    // }else{
-    //     if(!$('#finished').hasClass("hide"))
-    //     $('#finished').addClass("hide");
-    }
-
-});
-
 
 
 // ----------------------------------------
 // Normalize data
 // ----------------------------------------
 
-function normalizeRawGiroData(rawData){
-    if(rawData > 800 && rawData < 900){
-        return map(rawData,800,900,1,0.25);
+function normalizeRawGiroData(rawData) {
+    if (rawData > 800 && rawData < 900) {
+        return map(rawData, 800, 900, 1, 0.25);
     }
-    if(rawData > 0 && rawData < 1){
+    if (rawData > 0 && rawData < 1) {
         return rawData;
     }
 }
 
-function normalizeRawEEGData(rawData,rawMax,rawMin){
-    return map(rawData,rawMin,rawMax,2,0.5);
+function normalizeRawEEGData(rawData, rawMax, rawMin) {
+    return map(rawData, rawMin, rawMax, 2, 0.5);
 }
 
 
-function normalizeAbsoluteData(rawData,rawDataMax,rawDataMin){
-        return map(rawData,rawDataMin,rawDataMax,1,0.25);
+function normalizeAbsoluteData(rawData, rawDataMax, rawDataMin) {
+    return map(rawData, rawDataMin, rawDataMax, 1, 0.25);
 }
 
 // ----------------------------------------
@@ -342,23 +127,27 @@ function normalizeAbsoluteData(rawData,rawDataMax,rawDataMin){
 // ----------------------------------------
 
 var t;
-d3.select("#go").on("click", function(){
-    if(go == 0){
+d3.select("#go").on("click", function () {
+    if (go == 0) {
         go = 1;
         baselining = 1;
         recording = 1;
-        t = d3.timer(function(elapsed) {
-            if(elapsed < 1 * 30000){
+        t = d3.timer(function (elapsed) {
+            if (elapsed < 1 * 30000) {
                 $('#countdown').text(millisToMAndS((30 * 1000) - elapsed))
-                if(elapsed > 1 * 10000){
+                if (elapsed > 1 * 10000) {
                     baselining = 2;
                 }
-            }else{
+            } else {
                 recording = 2;
                 t.stop();
                 $('#countdown').text(" ");
 
+                // ----------------------------------------------------------
+                // INTEGRATE YOUR API HERE
                 // send image to database
+                // (update to database IP address etc)
+                // ----------------------------------------------------------
                 $.ajax({
                     type: "POST",
                     url: "http://192.168.0.139:6001/api/devour/updateUser",
@@ -367,34 +156,27 @@ d3.select("#go").on("click", function(){
                         "room": roomNum,
                         "stream": canvas.toDataURL()
                     },
-                    success : function(body){
-
-                        console.log('success')
+                    success: function (body) {
+                        console.log('success');
+                        // show success icon for 15 second then get ready for next user
+                        $('#success-img').attr('src','./assets/check.png');
                         setTimeout(function(){
-                            document.location.search = document.location.search + "&success=true"
-                            
-                        },1500);
+                            location.reload();
+                        },15000)
                     },
-                    error: function(){
-                        // $('#success-img').attr('src','./assets/error.png');
-                    document.location.search = document.location.search + "&success=true"
-                        
-                        setTimeout(function(){
-                            // t.stop();
-                            // $('#countdown').text("0:30")
-                            // go = 0;
-                            // wearing = 0;
-                            // recording = 0;
-                            // baselining = 0;
-                            // clear();
-                            // console.log("error");
-                        },5000)
+                    error: function () {
+                        console.log("error");
+                        // show error icon for 5 second and give user another chance
+                        $('#success-img').attr('src','./assets/error.png');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 5000)
                     },
                     dataType: ""
                 });
             }
         });
-    }else{
+    } else {
         go = 0;
         t.stop();
         $('#countdown').text("0:30")
@@ -460,17 +242,17 @@ function setup() {
     };
 
     if(roomNum == 4){
-        // Cheescake: 232, 87, 76
-        roomColor1 = color(232, 87, 76,125);
-        roomColor = color(232, 87, 76,75);
-        roomColor0 = color(232, 87, 76,65);
-    };
-
-    if(roomNum == 5){
         // Thai: 98, 214, 224
         roomColor1 = color(98, 214, 224,125);
         roomColor = color(98, 214, 224,75);
         roomColor0 = color(98, 214, 224,65);
+    };
+
+    if(roomNum == 5){
+        // Cheescake: 232, 87, 76
+        roomColor1 = color(232, 87, 76,125);
+        roomColor = color(232, 87, 76,75);
+        roomColor0 = color(232, 87, 76,65);
     };
 
     if(roomNum == 6){
@@ -479,15 +261,203 @@ function setup() {
         roomColor = color(224, 159, 56,75);
         roomColor0 = color(224, 159, 56,65);
     };
+
+    // ----------------------------------------
+    // ----------------------------------------
+    // HEADSET DATA EVENTS
+    // ----------------------------------------
+    // ----------------------------------------
+    socket.on(tabletNum,function(msg){
+
+        // global data variable
+        data = msg.elements[0];
+
+        // update raw data
+        if (data.address == "/muse/eeg") {
+
+            raw1 = data.args[0].value;
+            raw2 = data.args[1].value;
+            raw3 = data.args[2].value;
+            raw4 = data.args[3].value;
+            raw5 = data.args[4].value;
+
+            // CREATE BASELINE MINIMUMS AND MAXIMUMS
+            if (raw1 > raw1Max && raw1 < 1400) { raw1Max = raw1; }
+            if (raw1 < raw1Min && raw1 != 0) { raw1Min = raw1; }
+
+            if (raw2 > raw2Max && raw2 < 1400) { raw2Max = raw2; }
+            if (raw2 < raw2Min && raw2 != 0) { raw2Min = raw2; }
+
+            if (raw3 > raw3Max && raw3 < 1400) { raw3Max = raw3; }
+            if (raw3 < raw3Min && raw3 != 0) { raw3Min = raw3; }
+
+            if (raw4 > raw4Max && raw4 < 1400) { raw4Max = raw4; }
+            if (raw4 < raw4Min && raw4 != 0) { raw4Min = raw4; }
+
+            if (raw5 > raw5Max && raw5 < 1400) { raw5Max = raw5; }
+            if (raw5 < raw5Min && raw5 != 0) { raw5Min = raw5; }
+
+            if (baselining == 1) {
+                rawTotalMax = (raw1Max + raw2Max + raw3Max + raw4Max + raw5Max) / 5;
+            }
+
+            rawTotal = (raw1 + raw2 + raw3 + raw4 + raw5) / 5;
+
+            // TODO
+            // if not recording, do not use data
+            if (recording == 0) {
+                raw1Max = 0;
+                raw2Max = 0;
+                raw3Max = 0;
+                raw4Max = 0;
+                raw5Max = 0;
+
+                absolute1Max = 0;
+                absolute2Max = 0;
+                absolute3Max = 0;
+                absolute4Max = 0;
+                absolute5Max = 0;
+                absoluteTotalMax = 0;
+
+            }
+
+            // update normalized values
+            normalizedRaw1 = normalizeRawEEGData(raw1, maxVal, minVal);
+            normalizedRaw2 = normalizeRawEEGData(raw2, maxVal, minVal);
+            normalizedRaw3 = normalizeRawEEGData(raw3, maxVal, minVal);
+            normalizedRaw4 = normalizeRawEEGData(raw4, maxVal, minVal);
+            normalizedRaw5 = normalizeRawEEGData(raw5, maxVal, minVal);
+
+            // // alternative normalization
+            // normalizedRaw1 = normalizeRawEEGData(raw1, raw1Max, raw1Min);
+            // normalizedRaw2 = normalizeRawEEGData(raw2, raw2Max, raw2Min);
+            // normalizedRaw3 = normalizeRawEEGData(raw3, raw3Max, raw3Min);
+            // normalizedRaw4 = normalizeRawEEGData(raw4, raw4Max, raw4Min);
+            // normalizedRaw5 = normalizeRawEEGData(raw5, raw5Max, raw5Min);
+        }
+
+
+        // state: headband "wearing"
+        if(data.address == "/muse/elements/touching_forehead"){
+            wearing = data.args[0].value;
+        }
+
+        // event: jaw clench
+        if(data.address == "/muse/elements/jaw_clench"){
+            jaw = 15;
+        }
+
+        // event: head XY tilt
+        if(data.address == "/muse/acc"){
+            // TODO find best value
+            if(data.args[0].value < -0.2){
+              accelerationX = 5;
+            }
+        }
+
+        // event: absolute data values
+        if (data.address == "/muse/elements/delta_absolute") {
+            absolute1 = data.args[0].value
+            if (absolute1 > absolute1Max) { absolute1Max = absolute1; }
+            if (absolute1 < absolute1Min && absolute1 != 0) { absolute1Min = absolute1; }
+            normalizedAbsolute1 = normalizeAbsoluteData(absolute1, absolute1Max, absolute1Min);
+        }
+
+        if (data.address == "/muse/elements/theta_absolute") {
+            absolute2 = data.args[0].value
+            if (absolute2 > absolute2Max) { absolute2Max = absolute2; }
+            if (absolute2 < absolute2Min && absolute2 != 0) { absolute2Min = absolute2; }
+            normalizedAbsolute2 = normalizeAbsoluteData(absolute2, absolute2Max, absolute2Min);
+        }
+
+        if (data.address == "/muse/elements/alpha_absolute") {
+            absolute3 = data.args[0].value
+            if (absolute3 > absolute3Max) { absolute3Max = absolute3; }
+            if (absolute3 < absolute3Min && absolute3 != 0) { absolute3Min = absolute3; }
+            normalizedAbsolute3 = normalizeAbsoluteData(absolute3, absolute3Max, absolute3Min);
+        }
+
+        if (data.address == "/muse/elements/beta_absolute") {
+            absolute4 = data.args[0].value
+            if (absolute4 > absolute4Max) { absolute4Max = absolute4; }
+            if (absolute4 < absolute4Min && absolute4 != 0) { absolute4Min = absolute4; }
+            normalizedAbsolute4 = normalizeAbsoluteData(absolute4, absolute4Max, absolute4Min);
+        }
+
+        if (data.address == "/muse/elements/gamma_absolute") {
+            absolute5 = data.args[0].value
+            if (absolute5 > absolute5Max) { absolute5Max = absolute5; }
+            if (absolute5 < absolute5Min && absolute5 != 0) { absolute5Min = absolute5; }
+            normalizedAbsolute5 = normalizeAbsoluteData(absolute5, absolute5Max, absolute5Min);
+        }
+
+        absoluteTotalMax = (absolute1Max + absolute2Max + absolute3Max + absolute4Max) / 4;
+
+
+        // UPDATE THE DISPLAY STATE VARIABLES
+
+        // if not wearing
+        if(wearing == 0 && recording == 0){
+            $(".visual-indicator").addClass("hide");
+            if($('#not-wearing').hasClass("hide")){
+                $('#not-wearing').removeClass("hide");
+            }
+
+            if(recording != 0){
+                go = 0;
+                recording = 0;
+                baselining = 0;
+                t.stop();
+            }
+
+
+        // if wearing but not recording
+        } else if(wearing == 1 && baselining == 0){
+            $(".visual-indicator").addClass("hide");
+            if($('#wearing').hasClass("hide")){
+                $('#wearing').removeClass("hide");
+            }
+
+        // if wearing and baseline
+        }else if( baselining == 1){
+            $(".visual-indicator").addClass("hide");
+            if($('#recording').hasClass("hide")){
+                $('#recording').removeClass("hide");
+            }
+            if($('#baselining').hasClass("hide")){
+                $('#baselining').removeClass("hide");
+            }
+
+        // if analysing
+        }else if(baselining == 2 && recording != 2){
+            $(".visual-indicator").addClass("hide");
+            if($('#recording').hasClass("hide")){
+                $('#recording').removeClass("hide");
+            }
+            if($('#eating').hasClass("hide")){
+                $('#eating').removeClass("hide");
+            }
+        }else if(recording == 2){
+            $(".visual-indicator").addClass("hide");
+
+            if($('#finished').hasClass("hide")){
+                $('#finished').removeClass("hide");
+            }
+            if($('#success-img').hasClass("hide")){
+                $('#success-img').removeClass("hide");
+            }
+        }
+
+    });
 }
 
 function draw() {
-    
+
     // 8 bit fading up and down
-    if(counter > 255){count = -2;}
-    if(counter < 0){count = 2;}
+    if (counter > 255) { count = -2; }
+    if (counter < 0) { count = 2; }
     counter += count;
-    
+
 
     // -----------------------------------------------
     // IDLE : HEADBAND OFF
@@ -497,49 +467,49 @@ function draw() {
 
         start = 0;
         push();
-        if(frameCount % 10 == 0){
+        if (frameCount % 10 == 0) {
             // fill(255,50);
             // rect(0,0,width,height);
             clear();
         }
 
         // center on canvas
-        translate(width/2,height/2);
+        translate(width / 2, height / 2);
 
         push();
-        rotate(frameCount*2);
-        translate(0,185);
+        rotate(frameCount * 2);
+        translate(0, 185);
         fill(roomColor);
-        ellipse(0,0,15,5);
+        ellipse(0, 0, 15, 5);
         pop();
 
         push();
-        rotate(frameCount*2 + 15);
-        translate(0,145);
+        rotate(frameCount * 2 + 15);
+        translate(0, 145);
         fill(roomColor);
-        ellipse(0,0,15,5);
+        ellipse(0, 0, 15, 5);
         pop();
 
         push();
-        rotate(frameCount*2 + 30);
-        translate(0,105);
+        rotate(frameCount * 2 + 30);
+        translate(0, 105);
         fill(roomColor);
-        ellipse(0,0,15,5);
+        ellipse(0, 0, 15, 5);
         pop();
 
         push();
-        rotate(frameCount*2 + 55);
-        translate(0,65);
+        rotate(frameCount * 2 + 55);
+        translate(0, 65);
         fill(roomColor);
-        ellipse(0,0,15,5);
+        ellipse(0, 0, 15, 5);
         pop();
 
 
         push();
-        rotate(frameCount*2 + 120);
-        translate(0,25);
+        rotate(frameCount * 2 + 120);
+        translate(0, 25);
         fill(roomColor);
-        ellipse(0,0,15,5);
+        ellipse(0, 0, 15, 5);
         pop();
 
         pop();
@@ -550,73 +520,73 @@ function draw() {
     // NOT RECORDING, BUT HEADBAND ON
     // -----------------------------------------------
 
-    if(wearing == 1 && recording == 0){
+    if (wearing == 1 && recording == 0) {
 
         start = 0;
 
         push();
-        if(frameCount % 3 == 0){
-        //     fill(255,50);
-        //     rect(0,0,width,height);
+        if (frameCount % 3 == 0) {
+            //     fill(255,50);
+            //     rect(0,0,width,height);
             clear();
         }
 
         // center on canvas
-        translate(width/2,height/2);
+        translate(width / 2, height / 2);
 
         push();
 
         push();
-        rotate(frameCount*2);
-        translate(0,165 + normalizedRaw2*7);
+        rotate(frameCount * 2);
+        translate(0, 165 + normalizedRaw2 * 7);
         fill(roomColor);
-        ellipse(0,0,15,5);
+        ellipse(0, 0, 15, 5);
         pop();
 
         push();
-        rotate(frameCount*2 + 15);
-        translate(0,125 + normalizedRaw2*7);
+        rotate(frameCount * 2 + 15);
+        translate(0, 125 + normalizedRaw2 * 7);
         fill(roomColor);
-        ellipse(0,0,15,5);
-        rotate(-4*frameCount);
+        ellipse(0, 0, 15, 5);
+        rotate(-4 * frameCount);
         fill(roomColor0);
-        ellipse(5,0,5,5);
+        ellipse(5, 0, 5, 5);
         pop();
 
         push();
-        rotate(frameCount*2 + 30);
-        translate(0,85 + normalizedRaw2*7);
+        rotate(frameCount * 2 + 30);
+        translate(0, 85 + normalizedRaw2 * 7);
         fill(roomColor);
-        ellipse(0,0,15,5);
-        rotate(-4*frameCount);
+        ellipse(0, 0, 15, 5);
+        rotate(-4 * frameCount);
         fill(roomColor0);
-        ellipse(5,0,5,5);
+        ellipse(5, 0, 5, 5);
         pop();
 
         push();
-        rotate(frameCount*2 + 55);
-        translate(0,45 + normalizedRaw2*7);
+        rotate(frameCount * 2 + 55);
+        translate(0, 45 + normalizedRaw2 * 7);
         fill(roomColor);
-        rotate(-2*frameCount);
-        ellipse(0,0,15,5);
-        rotate(-4*frameCount);
+        rotate(-2 * frameCount);
+        ellipse(0, 0, 15, 5);
+        rotate(-4 * frameCount);
         fill(roomColor0);
-        ellipse(5,0,5,5);
+        ellipse(5, 0, 5, 5);
         pop();
 
         push();
-        rotate(frameCount*2 + 120);
-        translate(0,25);
+        rotate(frameCount * 2 + 120);
+        translate(0, 25);
         fill(roomColor);
-        rotate(-4*frameCount);
+        rotate(-4 * frameCount);
 
-        ellipse(0,0,15,5);
-        rotate(-4*frameCount);
-        ellipse(5,0,5,5);
-        ellipse(-7,10,5,5);
-        translate(0,normalizedRaw2*7);
+        ellipse(0, 0, 15, 5);
+        rotate(-4 * frameCount);
+        ellipse(5, 0, 5, 5);
+        ellipse(-7, 10, 5, 5);
+        translate(0, normalizedRaw2 * 7);
         fill(roomColor0);
-        ellipse(5,0,5,5);
+        ellipse(5, 0, 5, 5);
         pop();
 
         pop();
@@ -627,10 +597,10 @@ function draw() {
     // BASELINE : HEADBAND ON, TIMER ON, 10 SECOND EYES CLOSED MEDITATION
     // -----------------------------------------------
 
-    if(wearing == 1 && baselining == 1){
+    if (wearing == 1 && baselining == 1) {
 
         // clear idle visualisation
-        if(start == 0){
+        if (start == 0) {
             clear();
             start = 1;
         }
@@ -638,41 +608,41 @@ function draw() {
         push();
 
         // center on canvas
-        translate(width/2,height/2);
+        translate(width / 2, height / 2);
 
         push();
-        rotate(frameCount/frameRotation);
-        translate(0, normalizedRaw1*(width/3) - 100);
+        rotate(frameCount / frameRotation);
+        translate(0, normalizedRaw1 * (width / 3) - 100);
         noStroke();
         fill(roomColor0);
-        ellipse(random(-5,5),random(-5,5),2,2);
-        ellipse(random(5),random(5),normalizedRaw1*2,normalizedRaw1*2);
-        ellipse(0,0,1 + map(normalizedRaw1,0,1,0,3), 1 + map(normalizedRaw1,0,1,0,3));
+        ellipse(random(-5, 5), random(-5, 5), 2, 2);
+        ellipse(random(5), random(5), normalizedRaw1 * 2, normalizedRaw1 * 2);
+        ellipse(0, 0, 1 + map(normalizedRaw1, 0, 1, 0, 3), 1 + map(normalizedRaw1, 0, 1, 0, 3));
         pop();
 
         push();
-        rotate(frameCount/frameRotation);
-        translate(0, normalizedAbsolute1*(width/2 -150));
-        fill(normalizedAbsolute3*180);
+        rotate(frameCount / frameRotation);
+        translate(0, normalizedAbsolute1 * (width / 2 - 150));
+        fill(normalizedAbsolute3 * 180);
         fill(roomColor0);
-        ellipse(random(5),random(5),normalizedAbsolute3*2,normalizedAbsolute3*2);
-        ellipse(random(5),random(5),normalizedAbsolute3*2,normalizedAbsolute3*2);
-        ellipse(0,0,1 + map(normalizedRaw1,0,1,0,2), 1 + map(normalizedRaw1,0,1,0,2));
+        ellipse(random(5), random(5), normalizedAbsolute3 * 2, normalizedAbsolute3 * 2);
+        ellipse(random(5), random(5), normalizedAbsolute3 * 2, normalizedAbsolute3 * 2);
+        ellipse(0, 0, 1 + map(normalizedRaw1, 0, 1, 0, 2), 1 + map(normalizedRaw1, 0, 1, 0, 2));
         pop();
 
         push();
-        rotate(frameCount/frameRotation);
-        translate(0, (normalizedAbsolute4)*(width/3) - 50);
+        rotate(frameCount / frameRotation);
+        translate(0, (normalizedAbsolute4) * (width / 3) - 50);
         fill(roomColor0);
-        ellipse(random(5),random(5),normalizedAbsolute4*2,normalizedAbsolute4*2);
+        ellipse(random(5), random(5), normalizedAbsolute4 * 2, normalizedAbsolute4 * 2);
         pop();
 
         push();
-        rotate(frameCount/frameRotation);
-        translate(0, normalizedAbsolute5*(width/2 -150));
-        fill(normalizedAbsolute5*180);
+        rotate(frameCount / frameRotation);
+        translate(0, normalizedAbsolute5 * (width / 2 - 150));
+        fill(normalizedAbsolute5 * 180);
         fill(roomColor0);
-        ellipse(0,0,1 + map(normalizedAbsolute5,0,1,0,2), 1 + map(normalizedAbsolute5,0,1,0,2));
+        ellipse(0, 0, 1 + map(normalizedAbsolute5, 0, 1, 0, 2), 1 + map(normalizedAbsolute5, 0, 1, 0, 2));
         pop();
 
         pop();
@@ -683,82 +653,82 @@ function draw() {
     // TASTING : HEADBAND ON, TIMER ON, 20 SECOND ANALYSIS
     // -----------------------------------------------
 
-    if(wearing == 1 && recording != 2 && recording != 0 && baselining != 1 && baselining != 0){
+    if (wearing == 1 && recording != 2 && recording != 0 && baselining != 1 && baselining != 0) {
 
 
         push();
-            
+
         // center on canvas
-        translate(width/2,height/2);
-        
+        translate(width / 2, height / 2);
+
         push();
-        rotate(frameCount/frameRotation);
-        translate(0, normalizedRaw1*(width/3) - 100);
+        rotate(frameCount / frameRotation);
+        translate(0, normalizedRaw1 * (width / 3) - 100);
         noStroke();
         fill(roomColor0);
-        ellipse(random(-5,5),random(-5,5),2,2);
-        ellipse(random(5),random(5),normalizedRaw1*2,normalizedRaw1*2);
-        ellipse(0,0,1 + map(normalizedRaw1,0,1,0,3), 1 + map(normalizedRaw1,0,1,0,3));
+        ellipse(random(-5, 5), random(-5, 5), 2, 2);
+        ellipse(random(5), random(5), normalizedRaw1 * 2, normalizedRaw1 * 2);
+        ellipse(0, 0, 1 + map(normalizedRaw1, 0, 1, 0, 3), 1 + map(normalizedRaw1, 0, 1, 0, 3));
         pop();
 
         push();
-        rotate(frameCount/frameRotation);
-        translate(0, normalizedAbsolute1*(width/2 -150));
-        fill(normalizedAbsolute3*180);
+        rotate(frameCount / frameRotation);
+        translate(0, normalizedAbsolute1 * (width / 2 - 150));
+        fill(normalizedAbsolute3 * 180);
         fill(roomColor0);
-        ellipse(random(5),random(5),normalizedAbsolute3*2,normalizedAbsolute3*2);
-        ellipse(random(5),random(5),normalizedAbsolute3*2,normalizedAbsolute3*2);
+        ellipse(random(5), random(5), normalizedAbsolute3 * 2, normalizedAbsolute3 * 2);
+        ellipse(random(5), random(5), normalizedAbsolute3 * 2, normalizedAbsolute3 * 2);
         pop();
 
         push();
-        rotate(frameCount/frameRotation);
-        translate(0, (normalizedAbsolute4)*(width/3) - 50);
+        rotate(frameCount / frameRotation);
+        translate(0, (normalizedAbsolute4) * (width / 3) - 50);
         fill(roomColor0);
-        ellipse(random(5),random(5),normalizedAbsolute4*2,normalizedAbsolute4*2);
+        ellipse(random(5), random(5), normalizedAbsolute4 * 2, normalizedAbsolute4 * 2);
         pop();
 
         push();
-        rotate(frameCount/frameRotation);
-        translate(0, normalizedAbsolute5*(width/2 -150));
-        fill(normalizedAbsolute5*180);
+        rotate(frameCount / frameRotation);
+        translate(0, normalizedAbsolute5 * (width / 2 - 150));
+        fill(normalizedAbsolute5 * 180);
         fill(roomColor0);
-        ellipse(0,0,1 + map(normalizedRaw1,0,1,0,2), 1 + map(normalizedRaw1,0,1,0,2));
-        ellipse(0,0,normalizedAbsolute5*3,normalizedAbsolute5*3);
+        ellipse(0, 0, 1 + map(normalizedRaw1, 0, 1, 0, 2), 1 + map(normalizedRaw1, 0, 1, 0, 2));
+        ellipse(0, 0, normalizedAbsolute5 * 3, normalizedAbsolute5 * 3);
         pop();
+
 
         // raw totalmax is the trigger
-        if(  jaw > 0 || accelerationX > 0 || rawTotal > rawTotalMax * 10){
-            // console.log(accelerationX);
+        if(  jaw > 0 || accelerationX > 0 || rawTotal > rawTotalMax * 2){
             push();
-            
-            rotate(frameCount/frameRotation);
-            translate(0, normalizedAbsolute1*(width/2) - 25);
+
+            rotate(frameCount / frameRotation);
+            translate(0, normalizedAbsolute1 * (width / 2) - 25);
             fill(roomColor);
-            if(frameCount % 7 == 0){
+            if (frameCount % 7 == 0) {
                 noStroke();
-                for(var i = 0; i < map(normalizedRaw1,0,1,0,jaw*7);i++){
-                    ellipse(0,0,random(1,4),random(1,4));
-                    ellipse(random(random(-15),15),random(random(-150,5),0),random(3,7),random(3,7));
-                    ellipse(random(random(-65),65),random(random(-85,-5),15),random(3,7),random(3,7));
+                for (var i = 0; i < map(normalizedRaw1, 0, 1, 0, jaw * 7); i++) {
+                    ellipse(0, 0, random(1, 4), random(1, 4));
+                    ellipse(random(random(-15), 15), random(random(-150, 5), 0), random(3, 7), random(3, 7));
+                    ellipse(random(random(-65), 65), random(random(-85, -5), 15), random(3, 7), random(3, 7));
                 }
-                for(var i = 0; i < map(normalizedRaw1,0,1,0,accelerationX*7);i++){
-                    ellipse(0,0,random(1,4),random(1,4));
-                    ellipse(random(random(-15),15),random(random(-150,5),0),random(3,7),random(3,7));
-                    ellipse(random(random(-65),65),random(random(-85,-5),15),random(3,7),random(3,7));
+                for (var i = 0; i < map(normalizedRaw1, 0, 1, 0, accelerationX * 7); i++) {
+                    ellipse(0, 0, random(1, 4), random(1, 4));
+                    ellipse(random(random(-15), 15), random(random(-150, 5), 0), random(3, 7), random(3, 7));
+                    ellipse(random(random(-65), 65), random(random(-85, -5), 15), random(3, 7), random(3, 7));
                 }
-                for(var i = 0; i < map(normalizedRaw1,0,1,0,15);i++){
-                    ellipse(0,0,random(1,4),random(1,4));
-                    ellipse(random(random(-15),15),random(random(-150,5),0),random(3,7),random(3,7));
-                    ellipse(random(random(-65),65),random(random(-85,-5),15),random(3,7),random(3,7));
+                for (var i = 0; i < map(normalizedRaw1, 0, 1, 0, 15); i++) {
+                    ellipse(0, 0, random(1, 4), random(1, 4));
+                    ellipse(random(random(-15), 15), random(random(-150, 5), 0), random(3, 7), random(3, 7));
+                    ellipse(random(random(-65), 65), random(random(-85, -5), 15), random(3, 7), random(3, 7));
                 }
 
-            rotate(frameCount/frameRotation);
-            stroke(roomColor);
-            var lineLength = random(21);
-            noFill();
-            curve((raw1/rawTotalMax)*25,random(20),20,random(-40,40),(rawTotal/rawTotalMax)*5,lineLength,(raw2/rawTotalMax)*25,0);
-            curve((raw1/rawTotalMax)*50,random(40),20,random(-40,40),(rawTotal/rawTotalMax)*5,lineLength,(raw2/rawTotalMax)*50,0);
-            line(20,40,(rawTotal/rawTotalMax)*5,lineLength);
+                rotate(frameCount / frameRotation);
+                stroke(roomColor);
+                var lineLength = random(21);
+                noFill();
+                curve((raw1 / rawTotalMax) * 25, random(20), 20, random(-40, 40), (rawTotal / rawTotalMax) * 5, lineLength, (raw2 / rawTotalMax) * 25, 0);
+                curve((raw1 / rawTotalMax) * 50, random(40), 20, random(-40, 40), (rawTotal / rawTotalMax) * 5, lineLength, (raw2 / rawTotalMax) * 50, 0);
+                line(20, 40, (rawTotal / rawTotalMax) * 5, lineLength);
             }
 
             pop();
@@ -767,48 +737,10 @@ function draw() {
         pop();
     }
 
-    if(accelerationX > 0){
+    if (accelerationX > 0) {
         accelerationX = accelerationX - 1;
     }
-    if(jaw > 0){
+    if (jaw > 0) {
         jaw = jaw - 1;
     }
 }
-
-// update the food displayed
-$(document).ready(function(){
-    var foods = [
-        "Champagne",
-        "Himulayan Salt",
-        "Mushroom Rissoto",
-        "Cheescake",
-        "Thai Green Curry",
-        "Coffee"
-    ];
-
-    for(var i = 0; i < foods.length; i++){
-        if(i == roomNum -1){
-            $('h2.with-lines span').text(foods[i]);
-        }
-    }
-
-    $('.userName').text(userName);
-
-});
-
-
-// parent.postMessage("success","*");
-
-
-var myEvent = new CustomEvent('my_event', { detail: {note: 'success'} })
-
-setTimeout(function(){
-    window.parent.dispatchEvent(myEvent);
-    console.log("sent")
-},3000)
-
-
-
-// window.addEventListener('iframe_message', function(e) {
-//     console.log(e.detail.note);
-// }, false
