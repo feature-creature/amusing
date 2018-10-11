@@ -144,8 +144,13 @@
 
                             // retry different number input if submitted number is not in database
                             // todo: add error styling
-                            $("#gatherId input").val("");
-                            $("#gatherId input").attr("placeholder","000");
+                            $('#gatherId input').addClass('invalid');
+                            setTimeout(function(){
+                                $('#gatherId input').removeClass('invalid');
+                                $("#gatherId input").val("");
+                                $("#gatherId input").attr("placeholder","000");
+
+                            },1500)
                         },
                         dataType: ""
                     });
@@ -154,8 +159,13 @@
 
                     // retry number in correct format
                     // todo: add error styling
-                    $("#gatherId input").val("");
-                    $("#gatherId input").attr("placeholder","000");
+                    $('#gatherId input').addClass('invalid');
+                    setTimeout(function(){
+                        $('#gatherId input').removeClass('invalid');
+                        $("#gatherId input").val("");
+                        $("#gatherId input").attr("placeholder","000");
+
+                    },1500)
                 }
 
             });
